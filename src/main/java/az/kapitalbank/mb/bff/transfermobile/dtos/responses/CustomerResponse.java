@@ -1,4 +1,4 @@
-package az.kapitalbank.mb.bff.transfermobile.dto.response;
+package az.kapitalbank.mb.bff.transfermobile.dtos.responses;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

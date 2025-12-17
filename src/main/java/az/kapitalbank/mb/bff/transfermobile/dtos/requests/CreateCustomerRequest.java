@@ -1,4 +1,4 @@
-package az.kapitalbank.mb.bff.transfermobile.dto.request;
+package az.kapitalbank.mb.bff.transfermobile.dtos.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,8 +1,8 @@
 package az.kapitalbank.mb.bff.transfermobile.services;
 
 
-import az.kapitalbank.mb.bff.transfermobile.dto.request.CreateCustomerRequest;
-import az.kapitalbank.mb.bff.transfermobile.dto.response.CustomerResponse;
+import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreateCustomerRequest;
+import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CustomerResponse;
 import az.kapitalbank.mb.bff.transfermobile.entities.Customer;
 import az.kapitalbank.mb.bff.transfermobile.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
