@@ -1,12 +1,23 @@
 package az.kapitalbank.mb.bff.transfermobile.transfer.entities;
 
 import az.kapitalbank.mb.bff.transfermobile.customer.entities.Customer;
-import az.kapitalbank.mb.bff.transfermobile.transfer.enums.Type;
-import jakarta.persistence.*;
-import lombok.*;
+import az.kapitalbank.mb.bff.transfermobile.transfer.enums.TransferStatus;
+import az.kapitalbank.mb.bff.transfermobile.transfer.enums.TransferType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -19,12 +30,13 @@ public class Transfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     BigDecimal amount;
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    Customer customer;
+    Long customerId;
     @Enumerated(EnumType.STRING)
-    Type type;
+    TransferType type;
+    @Enumerated(EnumType.STRING)
+    TransferStatus status;
     BigDecimal tariff;
     BigDecimal commission;
     String payee;
+    LocalDateTime createdAt;
 }

@@ -19,25 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/transfer")
+@RequestMapping("/api/v1/customer")
 @RequiredArgsConstructor
 public class CustomerController {
 
     private final CustomerService customerService;
 
-    @PostMapping("/create/customer")
+    @PostMapping("/create")
     public ResponseEntity<CustomerResponse> create(
             @Valid @RequestBody CreateCustomerRequest request) {
         return ResponseEntity.ok(customerService.createCustomer(request));
     }
 
-    @GetMapping("/get/customer/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable Long id) {
         CustomerResponse customer = customerService.getCustomerById(id);
         return ResponseEntity.ok(customer);
     }
 
-    @GetMapping("/get/allCustomers")
+    @GetMapping("/get")
     public ResponseEntity<List<CustomerResponse>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
