@@ -25,11 +25,7 @@ public class CustomerService {
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toResponse(savedCustomer);
     }
-
-    public boolean existsById(Long id) {
-        return customerRepository.existsById(id);
-    }
-
+    
     public CustomerResponse getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
@@ -49,6 +45,7 @@ public class CustomerService {
         updatedCustomer.setLastName(customer.getLastName());
         updatedCustomer.setPin(customer.getPin());
         updatedCustomer.setDateOfBirth(customer.getDateOfBirth());
+
 
         return customerRepository.save(updatedCustomer);
     }
