@@ -1,5 +1,6 @@
 package az.kapitalbank.mb.bff.transfermobile.customer.dtos.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -26,6 +27,7 @@ public class CreateCustomerRequest {
     String pin;
 
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth;
 }
 

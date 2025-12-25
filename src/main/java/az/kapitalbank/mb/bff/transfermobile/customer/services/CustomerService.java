@@ -11,7 +11,7 @@ import az.kapitalbank.mb.bff.transfermobile.customer.repositories.CustomerReposi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,7 +22,7 @@ public class CustomerService {
 
     public CustomerResponse createCustomer(CreateCustomerRequest request) {
         Customer customer = customerMapper.toEntity(request);
-        customer.setCreatedAt(LocalDateTime.now());
+        customer.setCreatedAt(LocalDate.now().atStartOfDay());
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toResponse(savedCustomer);
     }
