@@ -1,12 +1,13 @@
 spring:
   application:
-    name: transfer-service
+    name: account-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/transfer
+    url: jdbc:mysql://localhost:3306/Account
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+
 
   jpa:
     hibernate:
@@ -16,6 +17,5 @@ spring:
   liquibase:
     enabled: false
 
-customer:
-  service:
-    url: http://localhost:8081
+server:
+  port: 8082
