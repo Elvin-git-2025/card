@@ -1,10 +1,12 @@
 package az.kapitalbank.mb.bff.transfermobile.services;
 
+import az.kapitalbank.mb.bff.transfermobile.clients.CustomerClient;
+import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreateAccountRequest;
 import az.kapitalbank.mb.bff.transfermobile.entities.Account;
-import az.kapitalbank.mb.bff.transfermobile.exceptions.AccountNotFoundException;
-import az.kapitalbank.mb.bff.transfermobile.exceptions.InsufficientBalanceException;
-import az.kapitalbank.mb.bff.transfermobile.exceptions.InvalidAmountException;
+import az.kapitalbank.mb.bff.transfermobile.exceptions.*;
+import az.kapitalbank.mb.bff.transfermobile.mappers.AccountMapper;
 import az.kapitalbank.mb.bff.transfermobile.repositories.AccountRepository;
+import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,26 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
+    private final CustomerClient customerClient;
 
+    private final AccountMapper accountMapper;
 
+    @Transactional
+    public Account createBalance(CreateAccountRequest request) {
+
+        try {
+            customerClient.getCustomerById(request.getCustomerId());
+        } catch (FeignException.NotFound ex) {
+            throw new CustomerNotFoundException(request.getCustomerId());
+        }
+
+        if (accountRepository.existsByCustomerId(request.getCustomerId())) {
+            throw new AccountAlreadyExistsException(request.getCustomerId());
+        }
+
+        Account account = accountMapper.toEntity(request);
+        return accountRepository.save(account);
+    }
     public BigDecimal getBalance(Long customerId) {
         Account account = getAccount(customerId);
         return account.getBalance();

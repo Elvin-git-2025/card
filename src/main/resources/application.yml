@@ -3,11 +3,10 @@ spring:
     name: account-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/Account
+    url: jdbc:mysql://localhost:3306/account
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-
 
   jpa:
     hibernate:
@@ -19,3 +18,7 @@ spring:
 
 server:
   port: 8082
+
+customer:
+  service:
+    url: http://localhost:8081
