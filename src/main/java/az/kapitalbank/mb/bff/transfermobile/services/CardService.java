@@ -4,6 +4,7 @@ import az.kapitalbank.mb.bff.transfermobile.clients.AccountClient;
 import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreateCardRequest;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.entities.Card;
+import az.kapitalbank.mb.bff.transfermobile.enums.CardStatus;
 import az.kapitalbank.mb.bff.transfermobile.exceptions.CustomerNotFoundException;
 import az.kapitalbank.mb.bff.transfermobile.mappers.CardMapper;
 import az.kapitalbank.mb.bff.transfermobile.repositories.CardRepository;
@@ -32,5 +33,16 @@ public class CardService {
 
         Card card = cardRepository.save(cardMapper.toEntity(request));
         return cardMapper.toResponse(card);
+    }
+
+    public Card validateActiveCard(String cardNumber) {
+        Card card = cardRepository.findByCardNumber(cardNumber)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if (card.getStatus() != CardStatus.ACTIVE) {
+            throw new RuntimeException("Card is not active");
+        }
+
+        return card;
     }
 }
