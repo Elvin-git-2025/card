@@ -5,6 +5,7 @@ import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreateCardRequest;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.entities.Card;
 import az.kapitalbank.mb.bff.transfermobile.enums.CardStatus;
+import az.kapitalbank.mb.bff.transfermobile.exceptions.CardNotFoundException;
 import az.kapitalbank.mb.bff.transfermobile.exceptions.CustomerNotFoundException;
 import az.kapitalbank.mb.bff.transfermobile.mappers.CardMapper;
 import az.kapitalbank.mb.bff.transfermobile.repositories.CardRepository;
@@ -12,6 +13,8 @@ import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +47,20 @@ public class CardService {
         }
 
         return card;
+    }
+
+    public CardResponse getCard(String cardNumber) {
+        Card card = cardRepository
+                .findByCardNumber(cardNumber)
+                .orElseThrow(() ->
+                        new CardNotFoundException(cardNumber)
+                );
+
+        return cardMapper.toResponse(card);
+    }
+
+    public List<CardResponse> getCards() {
+        List<Card> cards = cardRepository.findAll();
+        return cardMapper.toResponseList(cards);
     }
 }
