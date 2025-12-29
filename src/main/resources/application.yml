@@ -3,7 +3,7 @@ spring:
     name: account-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/account
+    url: jdbc:mysql://localhost:3306/card
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -17,8 +17,5 @@ spring:
     enabled: false
 
 server:
-  port: 8082
+  port: 8083
 
-customer:
-  service:
-    url: http://localhost:8080

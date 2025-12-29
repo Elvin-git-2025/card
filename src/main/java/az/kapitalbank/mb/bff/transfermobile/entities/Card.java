@@ -1,37 +1,35 @@
 package az.kapitalbank.mb.bff.transfermobile.entities;
 
-import jakarta.persistence.Column;
+import az.kapitalbank.mb.bff.transfermobile.enums.CardStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.EnumType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "accounts")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Account {
-
+public class Card {
     @Id
-     Long customerId;
+    Long id;
 
-    @Column(nullable = false, precision = 19, scale = 2)
-     BigDecimal balance;
+    String cardNumber;
 
-    @Column(nullable = false)
-     LocalDateTime updatedAt;
+    Long customerId;
 
-    @Column(nullable = false)
-     LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    CardStatus status;
+
+    LocalDateTime createdAt;
 }
