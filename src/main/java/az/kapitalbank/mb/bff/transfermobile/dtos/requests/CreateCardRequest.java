@@ -1,4 +1,4 @@
-package az.kapitalbank.mb.bff.transfermobile.dtos;
+package az.kapitalbank.mb.bff.transfermobile.dtos.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +20,6 @@ public class CreateCardRequest {
     @NotBlank
     String cardNumber;
 
-    @NotBlank
+    @NotNull
     LocalDate createdAt;
 }
