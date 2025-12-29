@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -33,6 +34,8 @@ public class CardService {
         } catch (FeignException ex) {
             throw new RuntimeException("Account service unavailable", ex);
         }
+
+        request.setCreatedAt(LocalDate.now());
 
         Card card = cardRepository.save(cardMapper.toEntity(request));
         return cardMapper.toResponse(card);

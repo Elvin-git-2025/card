@@ -6,6 +6,8 @@ import az.kapitalbank.mb.bff.transfermobile.services.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/card")
@@ -21,5 +23,10 @@ public class CardController {
     @GetMapping("/{cardNumber}")
     public CardResponse get(@PathVariable String cardNumber) {
         return cardService.getCard(cardNumber);
+    }
+
+    @GetMapping
+    public List<CardResponse> getCards() {
+        return cardService.getCards();
     }
 }
