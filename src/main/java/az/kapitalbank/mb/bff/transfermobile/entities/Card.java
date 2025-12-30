@@ -21,12 +21,17 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+
+    @Column(nullable = false, unique = true)
     String cardNumber;
 
+    @Column(nullable = false)
     Long customerId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     CardStatus status;
 
+    @Column(nullable = false, updatable = false)
     LocalDateTime createdAt;
 }

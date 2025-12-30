@@ -2,12 +2,11 @@ package az.kapitalbank.mb.bff.transfermobile.dtos.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -18,8 +17,6 @@ public class CreateCardRequest {
     Long customerId;
 
     @NotBlank
+    @Size(min = 16, max = 19)
     String cardNumber;
-
-    @NotNull
-    LocalDate createdAt;
 }
