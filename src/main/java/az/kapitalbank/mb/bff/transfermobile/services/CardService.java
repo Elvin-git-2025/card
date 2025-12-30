@@ -27,11 +27,9 @@ public class CardService {
 
         AccountBalanceResponse balance =
                 accountClient.getBalance(request.getCustomerId());
-
         if (balance == null || balance.getBalance() == null) {
             throw new RuntimeException("Customer has no active account");
         }
-
         Card card = cardMapper.toEntity(request);
         Card saved = cardRepository.save(card);
         return cardMapper.toResponse(saved);
