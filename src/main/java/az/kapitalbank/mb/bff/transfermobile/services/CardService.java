@@ -49,4 +49,20 @@ public class CardService {
         List<Card> cards = cardRepository.findAll();
         return cardMapper.toResponseList(cards);
     }
+
+    public boolean existsById(Long cardId) {
+        if (cardId == null || cardId <= 0) {
+            throw new IllegalArgumentException("Card ID must be positive");
+        }
+        return cardRepository.existsById(cardId);
+    }
+
+
+    public Long getCardIdByCustomerId(Long customerId) {
+        return cardRepository.findByCustomerId(customerId)
+                .map(Card::getId)
+                .orElseThrow(() -> new RuntimeException(
+                        "No active card found for customer id: " + customerId
+                ));
+    }
 }

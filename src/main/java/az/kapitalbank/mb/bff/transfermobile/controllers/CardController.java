@@ -5,8 +5,12 @@ import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.services.CardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 
@@ -29,5 +33,15 @@ public class CardController {
     @GetMapping
     public List<CardResponse> getCards() {
         return cardService.getCards();
+    }
+
+    @GetMapping("/{cardId}/exists")
+    public boolean exists(@PathVariable Long cardId) {
+        return cardService.existsById(cardId);
+    }
+
+    @GetMapping("/api/v1/cards/customer/{customerId}")
+    public Long getCardIdByCustomerId(@PathVariable Long customerId) {
+        return cardService.getCardIdByCustomerId(customerId);
     }
 }

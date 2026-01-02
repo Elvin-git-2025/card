@@ -17,6 +17,6 @@ public class CreateCardRequest {
     Long customerId;
 
     @NotBlank
-    @Size(min = 16, max = 19)
+    @Size(min = 16, max = 16)
     String cardNumber;
 }

@@ -13,6 +13,8 @@ public interface CardMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "status", constant = "ACTIVE")
+    @Mapping(target = "cardNumber", source = "cardNumber")    // add this
+    @Mapping(target = "customerId", source = "customerId")
     Card toEntity(CreateCardRequest request);
 
     CardResponse toResponse(Card card);
