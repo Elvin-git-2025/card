@@ -3,6 +3,7 @@ package az.kapitalbank.mb.bff.transfermobile.controllers;
 import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreateCardRequest;
 import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreditAccountRequest;
 import az.kapitalbank.mb.bff.transfermobile.dtos.requests.DebitAccountRequest;
+import az.kapitalbank.mb.bff.transfermobile.dtos.responses.AccountBalanceResponse;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.services.CardService;
 import jakarta.validation.Valid;
@@ -41,6 +42,11 @@ public class CardController {
     @GetMapping("/{cardId}/exists")
     public boolean exists(@PathVariable Long cardId) {
         return cardService.existsById(cardId);
+    }
+
+    @GetMapping("/{cardId}/balance")
+    public AccountBalanceResponse getBalance(@PathVariable Long cardId) {
+        return cardService.getBalance(cardId);
     }
 
     @GetMapping("/customer/{customerId}")

@@ -49,6 +49,16 @@ public class CardService {
         return cardMapper.toResponse(card);
     }
 
+    public AccountBalanceResponse getBalance(Long cardId) {
+        return cardRepository.findById(cardId)
+                .map(card -> {
+                    AccountBalanceResponse response = new AccountBalanceResponse();
+                    response.setBalance(card.getBalance());
+                    return response;
+                })
+                .orElseThrow(() -> new RuntimeException("Card not found with id: " + cardId));
+    }
+
     public List<CardResponse> getCards() {
         List<Card> cards = cardRepository.findAll();
         return cardMapper.toResponseList(cards);
