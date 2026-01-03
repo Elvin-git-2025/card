@@ -7,12 +7,13 @@ import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.services.CardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import  org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import java.util.List;
 
 
@@ -60,5 +61,15 @@ public class CardController {
             @PathVariable Long cardId,
             @RequestBody CreditAccountRequest request) {
         cardService.credit(cardId, request);
+    }
+
+    @PatchMapping("/{cardId}/block")
+    public void blockCard(@PathVariable Long cardId) {
+        cardService.blockCard(cardId);
+    }
+
+    @PatchMapping("/{cardId}/unblock")
+    public void unblockCard(@PathVariable Long cardId) {
+        cardService.unblockCard(cardId);
     }
 }

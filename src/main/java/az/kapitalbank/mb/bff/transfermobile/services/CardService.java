@@ -7,6 +7,7 @@ import az.kapitalbank.mb.bff.transfermobile.dtos.requests.DebitAccountRequest;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.AccountBalanceResponse;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.entities.Card;
+import az.kapitalbank.mb.bff.transfermobile.enums.CardStatus;
 import az.kapitalbank.mb.bff.transfermobile.exceptions.CardNotFoundException;
 import az.kapitalbank.mb.bff.transfermobile.exceptions.CustomerNotFoundException;
 import az.kapitalbank.mb.bff.transfermobile.mappers.CardMapper;
@@ -74,6 +75,7 @@ public class CardService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found"));
 
+        validateCardStatus(card);
         if (card.getBalance().compareTo(request.getAmount()) < 0) {
             throw new RuntimeException("Insufficient funds on card: " + cardId);
         }
@@ -87,7 +89,36 @@ public class CardService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found"));
 
+        validateCardStatus(card);
         card.setBalance(card.getBalance().add(request.getAmount()));
+        cardRepository.save(card);
+    }
+
+    private void validateCardStatus(Card card) {
+        if (card.getStatus() == CardStatus.BLOCKED) {
+            throw new RuntimeException("Transaction failed: Card is blocked.");
+        }
+        if (card.getStatus() == CardStatus.EXPIRED) {
+            throw new RuntimeException("Transaction failed: Card has expired.");
+        }
+    }
+
+    @Transactional
+    public void blockCard(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        card.setStatus(CardStatus.BLOCKED);
+        cardRepository.save(card);
+    }
+
+    @Transactional
+    public void unblockCard(Long cardId) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        // Logic: Perhaps only allow unblocking if it wasn't expired
+        card.setStatus(CardStatus.ACTIVE);
         cardRepository.save(card);
     }
 }
