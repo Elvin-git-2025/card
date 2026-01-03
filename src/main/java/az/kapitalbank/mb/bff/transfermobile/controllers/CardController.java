@@ -1,6 +1,8 @@
 package az.kapitalbank.mb.bff.transfermobile.controllers;
 
 import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreateCardRequest;
+import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreditAccountRequest;
+import az.kapitalbank.mb.bff.transfermobile.dtos.requests.DebitAccountRequest;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.services.CardService;
 import jakarta.validation.Valid;
@@ -40,8 +42,23 @@ public class CardController {
         return cardService.existsById(cardId);
     }
 
-    @GetMapping("/api/v1/cards/customer/{customerId}")
+    @GetMapping("/customer/{customerId}")
     public Long getCardIdByCustomerId(@PathVariable Long customerId) {
         return cardService.getCardIdByCustomerId(customerId);
+    }
+
+    @PostMapping("/{cardId}/debit")
+    public void debit(
+            @PathVariable Long cardId,
+            @RequestBody DebitAccountRequest request) {
+        cardService.debit(cardId, request);
+    }
+
+
+    @PostMapping("/{cardId}/credit")
+    public void credit(
+            @PathVariable Long cardId,
+            @RequestBody CreditAccountRequest request) {
+        cardService.credit(cardId, request);
     }
 }

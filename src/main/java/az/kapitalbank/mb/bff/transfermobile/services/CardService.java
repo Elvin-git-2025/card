@@ -2,10 +2,13 @@ package az.kapitalbank.mb.bff.transfermobile.services;
 
 import az.kapitalbank.mb.bff.transfermobile.clients.AccountClient;
 import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreateCardRequest;
+import az.kapitalbank.mb.bff.transfermobile.dtos.requests.CreditAccountRequest;
+import az.kapitalbank.mb.bff.transfermobile.dtos.requests.DebitAccountRequest;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.AccountBalanceResponse;
 import az.kapitalbank.mb.bff.transfermobile.dtos.responses.CardResponse;
 import az.kapitalbank.mb.bff.transfermobile.entities.Card;
 import az.kapitalbank.mb.bff.transfermobile.exceptions.CardNotFoundException;
+import az.kapitalbank.mb.bff.transfermobile.exceptions.CustomerNotFoundException;
 import az.kapitalbank.mb.bff.transfermobile.mappers.CardMapper;
 import az.kapitalbank.mb.bff.transfermobile.repositories.CardRepository;
 import jakarta.transaction.Transactional;
@@ -28,7 +31,7 @@ public class CardService {
         AccountBalanceResponse balance =
                 accountClient.getBalance(request.getCustomerId());
         if (balance == null || balance.getBalance() == null) {
-            throw new RuntimeException("Customer has no active account");
+            throw new CustomerNotFoundException(request.getCustomerId());
         }
         Card card = cardMapper.toEntity(request);
         Card saved = cardRepository.save(card);
@@ -64,5 +67,27 @@ public class CardService {
                 .orElseThrow(() -> new RuntimeException(
                         "No active card found for customer id: " + customerId
                 ));
+    }
+
+    @Transactional
+    public void debit(Long cardId, DebitAccountRequest request) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if (card.getBalance().compareTo(request.getAmount()) < 0) {
+            throw new RuntimeException("Insufficient funds on card: " + cardId);
+        }
+
+        card.setBalance(card.getBalance().subtract(request.getAmount()));
+        cardRepository.save(card);
+    }
+
+    @Transactional
+    public void credit(Long cardId, CreditAccountRequest request) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        card.setBalance(card.getBalance().add(request.getAmount()));
+        cardRepository.save(card);
     }
 }
