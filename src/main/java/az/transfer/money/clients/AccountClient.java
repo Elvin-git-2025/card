@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
         name = "account-service",
-        url = "${account.service.url}"
+        url = "${account.service.url}",
+        path= "/api/v1/accounts/"
 )
 public interface AccountClient {
-    @GetMapping("/api/v1/accounts/{customerId}/balance")
+    @GetMapping("/{customerId}/balance")
     AccountBalanceResponse getBalance(
             @PathVariable("customerId") Long customerId
     );
