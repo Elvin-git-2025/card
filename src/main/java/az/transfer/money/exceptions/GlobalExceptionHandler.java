@@ -1,6 +1,5 @@
-package az.transfer.money.global.exception.handler;
+package az.transfer.money.exceptions;
 
-import az.transfer.money.exceptions.CustomerNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
