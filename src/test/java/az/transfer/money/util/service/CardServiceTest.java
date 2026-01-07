@@ -2,10 +2,12 @@ package az.transfer.money.util.service;
 
 import az.transfer.money.clients.AccountClient;
 import az.transfer.money.dtos.requests.CreateCardRequest;
+import az.transfer.money.dtos.requests.CreditAccountRequest;
 import az.transfer.money.dtos.requests.DebitAccountRequest;
 import az.transfer.money.dtos.responses.AccountBalanceResponse;
 import az.transfer.money.dtos.responses.CardResponse;
 import az.transfer.money.entities.Card;
+import az.transfer.money.enums.CardStatus;
 import az.transfer.money.exceptions.CardNotFoundException;
 import az.transfer.money.mappers.CardMapper;
 import az.transfer.money.repositories.CardRepository;
@@ -16,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -166,5 +169,120 @@ public class CardServiceTest {
         verify(cardRepository).findById(cardId);
     }
 
+    @Test
+    void getListOfCards_shouldReturnListOfCards() {
 
+        Card card1 = new Card();
+        Card card2 = new Card();
+
+        CardResponse response1 = new CardResponse();
+        CardResponse response2 = new CardResponse();
+
+        List<Card> cards = List.of(card1, card2);
+        List<CardResponse> responses = List.of(response1, response2);
+
+        when(cardRepository.findAll()).thenReturn(cards);
+        when(cardMapper.toResponseList(cards)).thenReturn(responses);
+
+        List<CardResponse> result=cardService.getCards();
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result).isEqualTo(responses);
+
+        verify(cardRepository).findAll();
+        verify(cardMapper).toResponseList(cards);
+    }
+
+    @Test
+    void getListOfCards_shouldReturnListOfCards_whenCardDoesNotExist() {
+        List<Card> cards = List.of();
+        List<CardResponse> responses = List.of();
+
+        when(cardRepository.findAll()).thenReturn(cards);
+        when(cardMapper.toResponseList(cards)).thenReturn(responses);
+
+        List<CardResponse> result = cardService.getCards();
+
+        assertThat(result).isNotNull();
+        assertThat(result.size()).isEqualTo(0);
+
+        verify(cardRepository).findAll();
+        verify(cardMapper).toResponseList(cards);
+    }
+
+    @Test
+    void credit_shouldReturnCardResponse_whenCardExists() {
+        Long cardId = 1L;
+        Card card = new Card();
+        card.setId(cardId);
+        card.setBalance(new BigDecimal("150.00"));
+
+        CreditAccountRequest request = new CreditAccountRequest();
+        request.setAmount(new BigDecimal("50.00"));
+
+        when(cardRepository.findById(card.getId())).thenReturn(Optional.of(card));
+        cardService.credit(cardId, request);
+
+        assertThat(card.getBalance()).isEqualByComparingTo(new BigDecimal("200.00"));
+        verify(cardRepository).findById(cardId);
+        verify(cardRepository).save(card);
+    }
+
+    @Test
+    void credit_shouldThrowException_whenCardDoesNotExist() {
+        Long cardId = 99L;
+        when(cardRepository.findById(cardId)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> cardService.credit(cardId, new CreditAccountRequest()))
+        .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Card not found");
+        verify(cardRepository).findById(cardId);
+    }
+
+    @Test
+    void block_shouldReturnCardResponse_whenCardExists() {
+        Long cardId = 1L;
+        Card card = new Card();
+        card.setId(cardId);
+        card.setStatus(CardStatus.ACTIVE);
+
+        when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
+
+        cardService.blockCard(cardId);
+
+        assertThat(card.getStatus()).isEqualTo(CardStatus.BLOCKED);
+        verify(cardRepository).findById(cardId);
+        verify(cardRepository).save(card);
+    }
+
+    @Test
+    void block_shouldThrowException_whenCardDoesNotExist() {
+        Long cardId = 99L;
+        when(cardRepository.findById(cardId)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> cardService.blockCard(cardId))
+        .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Card not found");
+        verify(cardRepository).findById(cardId);
+    }
+
+    @Test
+    void unblock_shouldReturnCardResponse_whenCardExists() {
+        Long cardId = 1L;
+        Card card = new Card();
+        card.setId(cardId);
+        card.setStatus(CardStatus.BLOCKED);
+        when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
+        cardService.unblockCard(cardId);
+        assertThat(card.getStatus()).isEqualTo(CardStatus.ACTIVE);
+        verify(cardRepository).findById(cardId);
+        verify(cardRepository).save(card);
+    }
+    @Test
+    void unblock_shouldThrowException_whenCardDoesNotExist() {
+        Long cardId = 99L;
+        when(cardRepository.findById(cardId)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> cardService.unblockCard(cardId))
+        .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Card not found");
+        verify(cardRepository).findById(cardId);
+    }
 }

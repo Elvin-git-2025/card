@@ -127,7 +127,6 @@ public class CardService {
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new RuntimeException("Card not found"));
 
-        // Logic: Perhaps only allow unblocking if it wasn't expired
         card.setStatus(CardStatus.ACTIVE);
         cardRepository.save(card);
     }
